@@ -63,6 +63,36 @@ public class Program
             Console.Write("\n");
         }
     }
+    public static void interagir(Quadrado[,] campo, int x,int y )
+    {
+        if (campo[x,y].Bomba == true)
+        {
+            morte();
+        }else
+        {
+            campo[x,y].simbolo = Convert.ToChar(campo[x,y].bombasAoRedor);   
+        }
+        if (campo[x,y].bombasAoRedor == 0)
+        {
+        int xAoRedorMin = Math.Max(0, x - 1);
+        int yAoRedorMin = Math.Max(0, y - 1);
+        int xAoRedorMax = Math.Min(campo.GetLength(0) - 1, x+1);
+        int yAoRedorMax = Math.Min(campo.GetLength(1) - 1, y+1);
+        for(int xAoRedor = xAoRedorMin; xAoRedor <= xAoRedorMax;xAoRedor++)
+        {
+            for(int yAoRedor = yAoRedorMin; yAoRedor <= yAoRedorMax;yAoRedor++)
+            {
+                interagir(campo,xAoRedor,yAoRedor);
+            }
+        }
+        }
+    }
+    public static void morte()
+    {
+        Console.Clear();
+        Console.WriteLine("Você perdeu!");
+
+    }
     public static void Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -88,8 +118,28 @@ public class Program
         campo[0,0].foiInteragido = true;
         Console.WriteLine(campo[0,0].foiInteragido);
         Espaco[,] Campo = criarCampo(10,8,8);*/
-
-        Quadrado[,] CampoMinado = criarCampoMinado(10, 16, 8);
+        bool inicioDoPrograma = true;
+        bool partida = false;
+        bool ligado = true;
+        Quadrado[,]? CampoMinado;
+        while (ligado)
+        {
+            while (inicioDoPrograma)
+            {
+                Console.WriteLine("Bem vindo!");
+                Console.WriteLine("Qual largura você deseja para o campo?");
+                int xEscolhido = Convert.ToInt32(Console.ReadLine())-1 ;
+                Console.WriteLine("Qual altura você deseja para o campo?") ;
+                int yEscolhido = Convert.ToInt32(Console.ReadLine())-1 ;
+                CampoMinado = criarCampoMinado(0,xEscolhido,yEscolhido);
+                partida = true;
+                inicioDoPrograma = false;
+            }
+            while (partida)
+            {
+                
+            }
+        }
         mostrarCampo(CampoMinado);
 
 
