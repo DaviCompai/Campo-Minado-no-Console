@@ -227,7 +227,7 @@ public class Program
                     naoRespondido = false;
                     break;
                 default:
-                    Console.WriteLine("Entrada inválida, escreva novamente..");
+                    EscreverEstiloAviso("Entrada inválida, escolha S ou N");
                     break;
             }
         }
@@ -292,6 +292,14 @@ public class Program
         }
 
     }
+    public static void EscreverEstiloAviso(string entrada)
+    {
+        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.BackgroundColor = ConsoleColor.White;
+        Console.Write(entrada);
+        Console.ResetColor();
+        Console.Write("\n");
+    }
     public static void Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -305,12 +313,19 @@ public class Program
         {
             while (inicioDoPrograma)
             {
+                printarLinhas(3);
                 Console.WriteLine("Bem vindo!");
                 Console.WriteLine("Qual tamanho você deseja para o campo?");
-                int tamanhoCampo = Convert.ToInt32(Console.ReadLine());
+                string? entradaTamanhoCampo = Console.ReadLine();
+                if (int.TryParse(entradaTamanhoCampo, out _) == false)
+                {
+                    EscreverEstiloAviso("Tamanho invalido! Escolha um valor numérico de no mínimo 3 e no máximo 30");
+                    break;
+                }
+                int tamanhoCampo = Convert.ToInt32(entradaTamanhoCampo);
                 if (tamanhoCampo < 3 || tamanhoCampo > 30)
                 {
-                    Console.WriteLine("Tamanho inadequado! escolha um valor de no mínimo 3 e no máximo 30.");
+                    EscreverEstiloAviso("Tamanho inadequado! escolha um valor de no mínimo 3 e no máximo 30.");
                     break;
                 }
                 CampoMinado = criarCampoMinado(0, tamanhoCampo*2, tamanhoCampo);
@@ -324,7 +339,7 @@ public class Program
                     printarLinhas(3);
                     Console.WriteLine("Parabéns! você ganhou.");
                     Console.WriteLine("Deseja começar novamente? (Sim[s] ou Não[n])");
-                    string escolha = Console.ReadLine();
+                    string? escolha = Console.ReadLine();
                     if (escolha == "S")
                     {
                         inicioDoPrograma = true;
@@ -337,35 +352,36 @@ public class Program
                     }
                     else
                     {
-                        Console.WriteLine("Entrada incorreta! responda com S ou N!");
+                        EscreverEstiloAviso("Entrada incorreta! responda com S ou N!");
                     }
                 }
                 mostrarCampo(CampoMinado);
                 Console.WriteLine("Digite sua ação (interagir[i],bandeira[b]) acompanhada pelas cordenadas x e y, separadas por virgulas");
+                printarLinhas(3);
                 string? entradaRaw = Console.ReadLine();
                 if (string.IsNullOrWhiteSpace(entradaRaw))
                 {
-                    Console.WriteLine("Entrada vazia. Formato: ação,x,y (ex: i,5,5)");
-                    continue;
+                    EscreverEstiloAviso("Entrada vazia. Formato: ação,x,y (ex: i,5,5)");
+                    break;
                 }
 
                 var partes = entradaRaw.Split(',');
                 if (partes.Length != 3)
                 {
-                    Console.WriteLine("Formato inválido. Use: ação,x,y (ex: i,5,5)");
-                    continue;
+                    EscreverEstiloAviso("Formato inválido. Use: ação,x,y (ex: i,5,5)");
+                    break;
                 }
                 string tipo = partes[0];
                 int localX = localParaNumero(partes[1][0]) - 1;
                 int localY = localParaNumero(partes[2][0]) - 1;
                 if (localX < 0 || localX > CampoMinado.GetLength(0))
                 {
-                    Console.WriteLine($"Valor de X incompatível! Escolha um valor entre 1 e {CampoMinado.GetLength(0)}");
+                    EscreverEstiloAviso($"Valor de X incompatível! Escolha um valor entre 1 e {CampoMinado.GetLength(0)}");
                     break;
                 }
                 if (localY < 0 || localY > CampoMinado.GetLength(1))
                 {
-                    Console.WriteLine($"Valor de Y incompatível! Escolha um valor entre 1 e {CampoMinado.GetLength(1)}");
+                    EscreverEstiloAviso($"Valor de Y incompatível! Escolha um valor entre 1 e {CampoMinado.GetLength(1)}");
                     break;
                 }
                 if (tipo.ToLower() == "i")
@@ -375,6 +391,10 @@ public class Program
                 else if(tipo.ToLower() == "b")
                 {
                     ColocarBandeira(CampoMinado, localX, localY);
+                }
+                else
+                {
+                    EscreverEstiloAviso("Entrada inválida! o primeiro dígito deve ser i ou b.");
                 }
                 if (morto == true)
                 {
