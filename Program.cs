@@ -225,7 +225,7 @@ public class Program
     public static void morte(Quadrado[,] campo)
     {
         printarLinhas(2);
-        Console.WriteLine("You died! bad luck :(");
+        Console.WriteLine("Você perdeu!");
         for (int y = 0; y < campo.GetLength(1); y++)
         {
             for (int x = 0; x < campo.GetLength(0); x++)
@@ -237,7 +237,7 @@ public class Program
             }
         }
         mostrarCampo(campo);
-        Console.WriteLine("Wanna start again? (Yes[s] No[n])");
+        Console.WriteLine("Começar de novo? (Sim[s] Não[n])");
         bool naoRespondido = true;
         while (naoRespondido)
         {
